@@ -8,12 +8,17 @@ variable "project_name" {
   default = "ToDoApp"
 }
 
-# Amazon Linux 2023
+variable "environment" {
+  type    = string
+  default = "dev"
+}
+
 variable "ami_id" {
   type    = string
   default = "ami-0ed094fb1304fd857"
 }
 
 variable "instance_type" {
+  type    = string
   default = "t3.micro"
 }

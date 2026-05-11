@@ -7,8 +7,8 @@ terraform {
     }
   }
   backend "s3" {
-    bucket         = "my-terraform-state-f969591c"
-    key            = "secure3tierwebapp/terraform.tfsate"
+    bucket         = "my-terraform-state-01419a9d"
+    key            = "secure3tierwebapp/DEV/terraform.tfsate"
     dynamodb_table = "terraform-state-locks"
     region         = "us-east-1"
   }
