@@ -3,7 +3,7 @@ output "rds_endpoint" {
 }
 
 output "db_address" {
-  value = aws_db_instance.primary_db.address 
+  value = aws_db_instance.primary_db.address
 }
 
 output "db_password" {

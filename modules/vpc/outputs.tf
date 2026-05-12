@@ -5,11 +5,11 @@ output "vpc_id" {
 # modules/vpc/outputs.tf
 
 output "public_subnets" {
-  value       = module.vpc.public_subnets 
+  value = module.vpc.public_subnets
 }
 
 output "private_subnets" {
-  value       = module.vpc.private_subnets 
+  value = module.vpc.private_subnets
 }
 
 output "alb_sg" {

@@ -14,12 +14,12 @@ variable "environment" {
 
 # Amazon Linux 2023
 variable "ami_id" {
-  type    = string
+  type = string
   # default = "ami-0a59ec92177ec3fad"
 }
 
 variable "instance_type" {
-  type    = string
+  type = string
   # default = "t3.micro"
 }
 

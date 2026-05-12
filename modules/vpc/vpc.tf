@@ -11,8 +11,8 @@ module "vpc" {
   database_subnet_group_name   = "${var.name}-db-subnet-group"
   public_subnets               = ["10.0.101.0/24", "10.0.102.0/24"]
 
-  enable_nat_gateway = false
-  enable_vpn_gateway = false
+  enable_nat_gateway      = false
+  enable_vpn_gateway      = false
   map_public_ip_on_launch = true
 
   tags = local.common_tags
@@ -55,25 +55,25 @@ resource "aws_security_group" "web_sg" {
     security_groups = [aws_security_group.alb_sg.id]
   }
   ingress {
-    description     = "Allow SSH traffic from anywhere"
-    from_port       = 22
-    to_port         = 22
-    protocol        = "tcp"
-    cidr_blocks     = ["0.0.0.0/0"]
-  }
-  ingress {
-    description     = "Allow traffic from anywhere for HTTP"
-    from_port       = 80
-    to_port         = 80
-    protocol        = "tcp"
+    description = "Allow SSH traffic from anywhere"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
   ingress {
-    description     = "Allow traffic from anywhere for HTTPS"
-    from_port       = 433
-    to_port         = 433
-    protocol        = "tcp"
-   cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow traffic from anywhere for HTTP"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  ingress {
+    description = "Allow traffic from anywhere for HTTPS"
+    from_port   = 433
+    to_port     = 433
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
   egress {
     description = "Allow all outbound traffic"
