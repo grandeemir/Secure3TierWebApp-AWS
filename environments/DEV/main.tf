@@ -11,14 +11,28 @@ module "rds" {
   rds_security_group_id = module.vpc.rds_sg.id
 }
 
-module "asg" {
-  source         = "../../modules/asg"
-  ami_id         = var.ami_id
-  instance_type  = var.instance_type
-  name           = "${var.name}-asg"
+module "web_asg" {
+  source           = "../../modules/asg"
+  name             = "${var.name}-asg"
+  environment      = var.environment
+  project_name     = var.project_name
+  max_size         = "3"
+  min_size         = "1"
+  desired_capacity = "2"
+  ami_id           = "ami-0a59ec92177ec3fad"
+  instance_type    = "t2.micro"
+  target_group_arn = module.elb_http.target_group_arn
+  web_sg           = module.vpc.web_sg.id
+  public_subnets   = module.vpc.public_subnets
+  db_address       = module.rds.db_address
+  db_password      = module.rds.db_password
+}
+
+module "elb_http" {
+  source         = "../../modules/elb"
+  vpc_id         = module.vpc.vpc_id
+  project_name   = var.project_name
   environment    = var.environment
-  web_sg         = module.vpc.web_sg.id
   public_subnets = module.vpc.public_subnets
-  db_address     = module.rds.db_address
-  db_password    = module.rds.db_password
+  alb_sg         = module.vpc.alb_sg.id
 }
