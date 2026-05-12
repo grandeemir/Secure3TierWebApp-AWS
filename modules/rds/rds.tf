@@ -18,13 +18,13 @@ resource "aws_db_subnet_group" "db_subnet" {
 resource "aws_db_instance" "primary_db" {
   identifier            = "my-3tier-mysql-primary"
   allocated_storage     = 20
-  max_allocated_storage = 100 # Otomatik depolama alanı artırımı
+  max_allocated_storage = 100 # automatically scale up to 100GB if needed
   storage_type          = "gp3"
   engine                = "mysql"
   engine_version        = "8.0"
   instance_class        = "db.t3.micro"
-  db_name               = "appdatabase"
-  username              = "admin"
+  db_name               = var.db_name
+  username              = var.username
   password              = random_password.db_password.result
 
   db_subnet_group_name   = aws_db_subnet_group.db_subnet.name
@@ -33,7 +33,7 @@ resource "aws_db_instance" "primary_db" {
   # STANDBY REPLICA 
   multi_az = true
 
-  backup_retention_period = 7
+  backup_retention_period = 1
   backup_window           = "03:00-04:00"
 
   # For production it should be false. 

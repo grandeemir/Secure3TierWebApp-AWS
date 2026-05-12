@@ -9,6 +9,8 @@ module "rds" {
   source                = "../../modules/rds"
   db_subnet_ids         = module.vpc.database_subnets
   rds_security_group_id = module.vpc.rds_sg.id
+  db_name               = "ToDoAppDB"
+  username              = "admin"
 }
 
 module "web_asg" {
@@ -16,8 +18,8 @@ module "web_asg" {
   name             = "${var.name}-asg"
   environment      = var.environment
   project_name     = var.project_name
-  max_size         = "3"
-  min_size         = "1"
+  max_size         = "4"
+  min_size         = "2"
   desired_capacity = "2"
   ami_id           = "ami-0a59ec92177ec3fad"
   instance_type    = "t2.micro"
