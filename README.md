@@ -10,7 +10,7 @@ Welcome to the Secure 3-Tier Web Application project! This project automatically
 ## 📖 What is a 3-Tier Architecture?
 
 <p align="center">
-  <img src="assets/secure3tierwebapp.png" alt="Architecture" width="800">
+  <img src="assets/secure3tierwebapp_black.png" alt="Architecture" width="800">
 </p>
 
 A 3-tier architecture divides the application into three logical parts (tiers). This makes the system more secure, easier to manage, and scalable.
