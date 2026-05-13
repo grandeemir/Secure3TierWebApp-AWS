@@ -30,7 +30,7 @@ When you run this Terraform project, it creates the following AWS resources. Her
 | AWS Resource | Purpose |
 | :--- | :--- |
 |  **VPC (Virtual Private Cloud)** | A private, secure network just for this project. |
-|  **Public & Private Subnets** | **Public subnets** are for the Load Balancer (internet accessible) Important: In this project I used EC2's in public subnet for reduce NAT GW cost, but don't worry EC2's are not accesable on the internet they just allowed for outgoind traffic and just allow traffic from ALB SG.<br>**Private subnets** are for the App Servers (EC2) and the Database (RDS) to keep them secure. |
+|  **Public & Private Subnets** | **Public subnets** are for the Load Balancer (internet accessible). ‼️Important: In this project I used EC2's in public subnet for reduce NAT GW cost, but don't worry EC2's are not accesable on the internet they just allowed for outgoind traffic and just allow traffic from ALB SG.<br>**Private subnets** are for the App Servers (EC2) and the Database (RDS) to keep them secure. |
 |  **Security Groups** | Firewalls that control who can talk to what. For example, only the Load Balancer can talk to the App Servers, and only the App Servers can talk to the Database. |
 |  **Application Load Balancer** | Distributes incoming user traffic evenly across multiple web servers. |
 |  **Auto Scaling Group** | Automatically creates new EC2 instances (servers) if there is a lot of traffic, and removes them when traffic is low. |
