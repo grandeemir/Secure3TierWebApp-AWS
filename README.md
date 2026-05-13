@@ -115,10 +115,10 @@ terraform destroy
 
 This project is constantly being improved. In upcoming updates, a comprehensive **Security and Monitoring Layer** will be added to the infrastructure, which will include:
 
-- [√]  **Amazon CloudWatch:** For monitoring resources, collecting logs, and setting up alarms.
+- [ √ ]  **Amazon CloudWatch:** For monitoring resources, collecting logs, and setting up alarms.
 - [ ]  **Amazon GuardDuty:** Intelligent threat detection to continuously monitor for malicious activity and unauthorized behavior.
 - [ ]  **AWS CloudTrail:** To track user activity and API usage across the AWS infrastructure.
-- [√]  **VPC Flow Logs:** To capture information about the IP traffic going to and from network interfaces in the VPC.
+- [ √ ]  **VPC Flow Logs:** To capture information about the IP traffic going to and from network interfaces in the VPC.
 
 ---
 
