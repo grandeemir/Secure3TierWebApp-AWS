@@ -30,7 +30,7 @@ When you run this Terraform project, it creates the following AWS resources. Her
 | AWS Resource | Purpose |
 | :--- | :--- |
 |  **VPC (Virtual Private Cloud)** | A private, secure network just for this project. |
-|  **Public & Private Subnets** | **Public subnets** are for the Load Balancer (internet accessible).<br>**Private subnets** are for the App Servers (EC2) and the Database (RDS) to keep them secure. |
+|  **Public & Private Subnets** | **Public subnets** are for the Load Balancer (internet accessible) Important: In this project I used EC2's in public subnet for reduce NAT GW cost, but don't worry EC2's are not accesable on the internet they just allowed for outgoind traffic and just allow traffic from ALB SG.<br>**Private subnets** are for the App Servers (EC2) and the Database (RDS) to keep them secure. |
 |  **Security Groups** | Firewalls that control who can talk to what. For example, only the Load Balancer can talk to the App Servers, and only the App Servers can talk to the Database. |
 |  **Application Load Balancer** | Distributes incoming user traffic evenly across multiple web servers. |
 |  **Auto Scaling Group** | Automatically creates new EC2 instances (servers) if there is a lot of traffic, and removes them when traffic is low. |
@@ -115,10 +115,10 @@ terraform destroy
 
 This project is constantly being improved. In upcoming updates, a comprehensive **Security and Monitoring Layer** will be added to the infrastructure, which will include:
 
-- [ ]  **Amazon CloudWatch:** For monitoring resources, collecting logs, and setting up alarms.
+- [√]  **Amazon CloudWatch:** For monitoring resources, collecting logs, and setting up alarms.
 - [ ]  **Amazon GuardDuty:** Intelligent threat detection to continuously monitor for malicious activity and unauthorized behavior.
 - [ ]  **AWS CloudTrail:** To track user activity and API usage across the AWS infrastructure.
-- [ ]  **VPC Flow Logs:** To capture information about the IP traffic going to and from network interfaces in the VPC.
+- [√]  **VPC Flow Logs:** To capture information about the IP traffic going to and from network interfaces in the VPC.
 
 ---
 

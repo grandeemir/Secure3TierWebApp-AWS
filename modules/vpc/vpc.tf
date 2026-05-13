@@ -18,6 +18,15 @@ module "vpc" {
   tags = local.common_tags
 }
 
+resource "aws_flow_log" "vpc_flow_log" {
+  iam_role_arn         = var.iam_role.arn
+  log_destination      = var.vpc_flow_logs.arn
+  log_destination_type = "cloud-watch-logs"
+  traffic_type         = "ALL"
+  vpc_id               = module.vpc.vpc_id
+  tags = local.common_tags
+}
+
 resource "aws_security_group" "alb_sg" {
   name        = "${var.name}-alb-sg"
   description = "Security group for ALB"
@@ -53,27 +62,6 @@ resource "aws_security_group" "web_sg" {
     to_port         = 80
     protocol        = "tcp"
     security_groups = [aws_security_group.alb_sg.id]
-  }
-  ingress {
-    description = "Allow SSH traffic from anywhere"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  ingress {
-    description = "Allow traffic from anywhere for HTTP"
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  ingress {
-    description = "Allow traffic from anywhere for HTTPS"
-    from_port   = 433
-    to_port     = 433
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
   }
   egress {
     description = "Allow all outbound traffic"

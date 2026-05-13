@@ -3,6 +3,18 @@ module "vpc" {
   name         = "dev-vpc"
   project_name = var.project_name
   environment  = var.environment
+  iam_role     = module.iam.vpc_flow_logs_role
+  vpc_flow_logs = module.cloudwatch.vpc_flow_logs
+}
+
+module "iam" {
+  source = "../../modules/security/iam"
+  name = var.name
+}
+
+module "cloudwatch" {
+  source = "../../modules/security/cloudwatch"
+  name = var.name
 }
 
 module "rds" {
