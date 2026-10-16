@@ -1,0 +1,17 @@
+# Local terraform (Plugins is there, )
+.terraform/
+
+# State files (too dangerous! all the files in the .terraform directory are ignored, but just to be sure)
+*.tfstate
+*.tfstate.*
+
+# Variable files (Sensitive data may be included in these files)
+*.tfvars
+*.tfvars.json
+
+# .env files (Sensitive data may be included in these files)
+.env
+
+# Crash log files (These files are created when Terraform crashes, and may contain sensitive information)
+.terraform.lock.hcl
+crash.log
