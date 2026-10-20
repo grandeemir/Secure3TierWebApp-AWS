@@ -14,12 +14,21 @@ resource "aws_launch_template" "web_server" {
   instance_initiated_shutdown_behavior = "terminate"
   key_name                             = null
 
+  iam_instance_profile {
+    name = aws_iam_instance_profile.ssm_instance_profile.name
+  }
+
+  metadata_options {
+    http_endpoint = "enabled"
+    http_tokens   = "required"
+  }
+
   monitoring {
     enabled = true
   }
 
   network_interfaces {
-    associate_public_ip_address = true
+    associate_public_ip_address = false
     delete_on_termination       = true
     description                 = "eth0"
     device_index                = 0
@@ -51,7 +60,7 @@ resource "aws_autoscaling_group" "web_asg" {
     version = "$Latest"
   }
 
-  vpc_zone_identifier       = var.public_subnets
+  vpc_zone_identifier       = var.private_subnets
   health_check_type         = "ELB"
   health_check_grace_period = 300
 

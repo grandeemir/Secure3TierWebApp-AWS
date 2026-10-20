@@ -12,6 +12,8 @@ module "vpc" {
   public_subnets               = ["10.0.101.0/24", "10.0.102.0/24"]
 
   enable_nat_gateway      = true
+  single_nat_gateway     = false
+  one_nat_gateway_per_az = true
   enable_vpn_gateway      = false
   map_public_ip_on_launch = true
 
@@ -119,6 +121,30 @@ resource "aws_security_group" "rds_sg" {
   }
   tags = {
     Name = "${var.name}-rds-sg"
+  }
+  egress {
+    description = "Allow all outbound traffic"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_security_group" "elasticache_sg" {
+  name        = "${var.name}-redis-sg"
+  description = "Security group for Redis"
+  vpc_id      = module.vpc.vpc_id
+
+  ingress {
+    description     = "Allow Redis traffic from backend servers"
+    from_port       = 6379
+    to_port         = 6379
+    protocol        = "tcp"
+    security_groups = [aws_security_group.backend_servers_sg.id]
+  }
+  tags = {
+    Name = "${var.name}-redis-sg"
   }
   egress {
     description = "Allow all outbound traffic"

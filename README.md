@@ -19,7 +19,7 @@ This project automatically builds a complete, secure, and scalable 3-tier web ap
 The project manages traffic and data across three distinct logical layers to ensure security and scalability:
 
 <p align="center">
-  <img src="assets/aws3tier.site-no-security-layer.svg" alt="Architecture" width="800">
+  <img src="assets/aws3tier.site.svg" alt="Architecture" width="800">
 </p>
 
 | Tier | Component | Description |

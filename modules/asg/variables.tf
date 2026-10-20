@@ -74,3 +74,7 @@ variable "private_subnets" {
 variable "backend_target_group_arn" {
   type = string
 }
+
+variable "redis_endpoint" {
+  type = string
+}

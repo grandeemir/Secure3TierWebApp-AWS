@@ -30,6 +30,7 @@ module "web_asg" {
   public_subnets           = module.vpc.public_subnets
   db_address               = module.rds.db_address
   db_password              = module.rds.db_password
+  redis_endpoint           = module.elasticache.primary_endpoint_address
   backend_alb_dns_name     = module.elb_http.backend_alb_dns_name
   backend_servers_sg_id    = module.vpc.backend_servers_sg_id
   private_subnets          = module.vpc.private_subnets
@@ -121,4 +122,21 @@ resource "aws_s3_bucket_policy" "static" {
   depends_on = [
     module.s3_static
   ]
+}
+
+module "elasticache" {
+  source = "../../modules/elasticache"
+
+  project_name               = var.project_name
+  environment                = var.environment
+  private_subnet_ids         = module.vpc.private_subnets
+  security_group_id          = module.vpc.elasticache_sg
+  engine                     = "redis"
+  engine_version             = "7.1"
+  node_type                  = "cache.t4g.micro"
+  num_cache_nodes            = 2
+  automatic_failover_enabled = true
+  multi_az_enabled           = true
+
+  tags = local.common_tags
 }

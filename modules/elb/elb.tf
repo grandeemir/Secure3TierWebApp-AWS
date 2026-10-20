@@ -1,10 +1,11 @@
 # 1. Uygulama Yük Dengeleyici (ALB)
 resource "aws_lb" "web_alb" {
-  name               = "${var.project_name}-${var.environment}-alb"
-  internal           = false
-  load_balancer_type = "application"
-  security_groups    = [var.alb_sg]
-  subnets            = var.public_subnets
+  name                       = "${var.project_name}-${var.environment}-alb"
+  internal                   = false
+  load_balancer_type         = "application"
+  security_groups            = [var.alb_sg]
+  subnets                    = var.public_subnets
+  drop_invalid_header_fields = true
 
   tags = var.tags
 }

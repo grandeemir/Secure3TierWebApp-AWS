@@ -33,8 +33,11 @@ resource "aws_db_instance" "primary_db" {
   # STANDBY REPLICA 
   multi_az = true
 
-  backup_retention_period = 1
-  backup_window           = "03:00-04:00"
+  backup_retention_period             = 7
+  storage_encrypted                   = true
+  deletion_protection                 = true
+  iam_database_authentication_enabled = false
+  backup_window                       = "03:00-04:00"
 
   # For production it should be false. 
   skip_final_snapshot = true

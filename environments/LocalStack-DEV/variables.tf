@@ -1,11 +1,11 @@
 variable "name" {
   type    = string
-  default = "3tier-vpc"
+  default = "aws3tier-project"
 }
 
 variable "project_name" {
   type    = string
-  default = "ToDoApp"
+  default = "aws3tier"
 }
 
 variable "environment" {

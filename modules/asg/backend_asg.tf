@@ -13,7 +13,13 @@ resource "aws_launch_template" "backend_server" {
   image_id                             = var.ami_id
   instance_type                        = var.instance_type
   instance_initiated_shutdown_behavior = "terminate"
-  key_name                             = null
+
+  metadata_options {
+    http_endpoint = "enabled"
+    http_tokens   = "required"
+  }
+
+  key_name = null
 
   monitoring {
     enabled = true
@@ -38,10 +44,11 @@ resource "aws_launch_template" "backend_server" {
   }
 
   user_data = base64encode(templatefile("../../scripts/user_data_backend.sh", {
-    db_host     = var.db_address
-    db_password = var.db_password
-    db_user     = "admin"
-    db_name     = "ToDoAppDB"
+    db_host        = var.db_address
+    db_password    = var.db_password
+    db_user        = "admin"
+    db_name        = "ToDoAppDB"
+    redis_endpoint = var.redis_endpoint
   }))
 }
 

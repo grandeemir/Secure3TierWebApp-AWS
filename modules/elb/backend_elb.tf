@@ -1,9 +1,10 @@
 resource "aws_lb" "backend_alb" {
-  name               = "${var.project_name}-${var.environment}-backend-alb"
-  internal           = true
-  load_balancer_type = "application"
-  security_groups    = [var.backend_alb_sg]
-  subnets            = var.private_subnets
+  name                       = "${var.project_name}-${var.environment}-backend-alb"
+  internal                   = true
+  load_balancer_type         = "application"
+  security_groups            = [var.backend_alb_sg]
+  subnets                    = var.private_subnets
+  drop_invalid_header_fields = true
 
   tags = var.tags
 }

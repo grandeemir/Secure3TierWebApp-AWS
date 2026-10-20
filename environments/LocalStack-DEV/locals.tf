@@ -4,5 +4,5 @@ locals {
     environment = var.environment # change this to match your environment
     terraform   = "true"
   }
-
+  application_domain = "app.${trimsuffix(var.domain_name, ".")}"
 }

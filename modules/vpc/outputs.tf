@@ -33,3 +33,7 @@ output "backend_servers_sg_id" {
 output "database_subnets" {
   value = module.vpc.database_subnets
 }
+
+output "elasticache_sg" {
+  value = aws_security_group.elasticache_sg.id
+}

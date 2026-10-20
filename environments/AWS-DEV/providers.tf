@@ -8,8 +8,8 @@ terraform {
   }
 
   backend "s3" {
-    bucket       = "my-terraform-state-01419a9d"
-    key          = "secure3tierwebapp/DEV/terraform.tfsate"
+    bucket       = "my-terraform-state-f841ce30"
+    key          = "aws3tier/DEV/terraform.tfsate"
     use_lockfile = true
     region       = "us-east-1"
   }

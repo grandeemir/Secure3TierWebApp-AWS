@@ -4,10 +4,6 @@ data "aws_route53_zone" "main" {
   private_zone = false
 }
 
-locals {
-  application_domain = "app.${trimsuffix(var.domain_name, ".")}"
-}
-
 resource "aws_acm_certificate" "cloudfront" {
   provider = aws.us_east_1
 
