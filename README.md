@@ -1,4 +1,4 @@
-# Secure 3-Tier Web Application on AWS with Terraform
+# Secure 3-Tier Web Application on AWS
 
 ![Terraform](https://img.shields.io/badge/Terraform-1.x-purple?logo=terraform)
 ![AWS](https://img.shields.io/badge/AWS-Cloud-orange?logo=amazon-aws)
@@ -7,102 +7,122 @@
 ![MySQL](https://img.shields.io/badge/MySQL-8.0-blue?logo=mysql)
 ![GitHub release](https://img.shields.io/github/v/release/grandeemir/Secure3TierWebApp-AWS.git)
 
-> **⚠️ Project Status: Active Development**  
-> This project is currently in the active development phase. The `DEV` environment is fully configured and ready for deployment. The `PROD` environment will be added in future updates.
+This project uses Terraform to build a 3-tier web application infrastructure on AWS.
+It separates the web, application, and database layers inside a VPC.
 
-This project automatically builds a complete, secure, and scalable 3-tier web application infrastructure on Amazon Web Services (AWS) using **Terraform**, following modern cloud best practices.
+## Architecture
 
----
+![AWS 3-tier architecture](assets/aws3tier.site.svg)
 
-## 🏗️ Project Architecture (3-Tier)
-
-The project manages traffic and data across three distinct logical layers to ensure security and scalability:
-
-<p align="center">
-  <img src="assets/aws3tier.site.svg" alt="Architecture" width="800">
-</p>
-
-| Tier | Component | Description |
-| :--- | :--- | :--- |
-| **Presentation (Web)** | `Public ALB` & `Nginx (ASG)` | Handles user requests and serves static frontend files. |
-| **Application (App)** | `Internal ALB` & `Node.js (ASG)` | Executes business logic and communicates with the database. |
-| **Data (Database)** | `Amazon RDS (MySQL)` | Stores application data securely with Multi-AZ redundancy. |
-
----
-
-## 🛠️ Technical Features & Resources
-
-When you run this Terraform project, the following AWS resources are created:
-
-- **VPC & Networking:**
-    - 2 Public Subnets (For Web ALB and Frontend instances)
-    - 2 Private Subnets (For Backend instances and Internal ALB)
-    - 2 Database Subnets (Dedicated for RDS)
-    - **NAT Gateway:** Configured to allow backend servers in private subnets to download updates/dependencies.
-- **Compute (Auto Scaling Groups):**
-    - **Frontend:** Amazon Linux 2023 instances with Nginx. Located in public subnets.
-    - **Backend:** Amazon Linux 2023 instances with Node.js. Fully isolated in private subnets.
-- **Load Balancing:**
-    - **External ALB:** Receives and distributes incoming internet traffic.
-    - **Internal ALB:** Provides secure communication between the Frontend and Backend tiers.
-- **Database:** Multi-AZ Amazon RDS (MySQL 8.0) instance for high availability.
-- **Security:** Strict Security Group rules following the "Least Privilege" principle.
-- **Access Management:** EC2 Instance Profile (SSM) allows secure terminal access without SSH keys.
-
----
-
-## 📂 Folder Structure
+The main request flow is:
 
 ```text
-├── environments/
-│   └── DEV/         # Configuration for the Development environment (Active)
-├── global/          # Global resources like S3 Backend or IAM roles
-├── modules/
-│   ├── vpc/         # Networking, Subnets, and Security Groups
-│   ├── asg/         # Auto Scaling Groups and Launch Templates (Web & App)
-│   ├── elb/         # Public and Internal Load Balancers
-│   └── rds/         # MySQL RDS and DB Subnet Groups
-└── scripts/         # Shell scripts for server setup (User Data - Node.js/Nginx)
+User -> Route 53 -> CloudFront/WAF -> Public ALB
+         -> Frontend Auto Scaling Group -> Internal ALB
+         -> Backend Auto Scaling Group -> RDS and ElastiCache
 ```
 
----
+The project also uses an S3 bucket for static files. CloudFront reads those files
+through an Origin Access Control.
 
-## 🚀 Deployment
+## What Terraform Creates
 
-### Prerequisites
-- An AWS Account and configured AWS CLI.
-- Terraform (v1.x+) installed.
+- A VPC in two Availability Zones.
+- Public, private, and database subnets.
+- Internet Gateway, NAT Gateways, route tables, and network ACLs.
+- Security groups for the ALBs, EC2 instances, RDS, and ElastiCache.
+- A public ALB for frontend traffic.
+- An internal ALB for backend traffic.
+- Frontend and backend Auto Scaling Groups with EC2 launch templates.
+- Amazon RDS for MySQL 8.0 with Multi-AZ enabled.
+- Amazon ElastiCache for Redis.
+- An S3 bucket for frontend static content.
+- CloudFront and AWS WAF for public traffic.
+- ACM certificate validation through Route 53 DNS records.
+- Route 53 DNS records for the application.
+- IAM role and instance profile for Systems Manager access.
 
-### Steps
-1. **Clone the Repository:**
-   ```bash
-   git clone https://github.com/grandeemir/Secure3TierWebApp-AWS.git
-   cd Secure3TierWebApp-AWS
-   ```
-2. **Navigate to the DEV Environment:**
-   ```bash
-   cd environments/DEV
-   ```
-3. **Initialize and Apply:**
-   ```bash
-   terraform init
-   terraform plan
-   terraform apply
-   ```
+## Environments
 
----
+### AWS DEV
 
-## 🔒 Security Notes
+`environments/AWS-DEV` contains the AWS deployment. It uses an S3 backend and
+creates the complete application stack.
 
-- **Database:** Passwords are automatically generated using `random_password` and never hardcoded.
-- **Isolation:** No backend resources are directly accessible from the internet. Frontend instances only accept traffic on port 80.
-- **Management:** It is recommended to use AWS Systems Manager (SSM) for secure instance access.
+Before applying it, check the AWS account, domain name, ACM certificate settings,
+AMI ID, and the IAM policy in [iam_policy.json](iam_policy.json).
 
----
+```bash
+cd environments/AWS-DEV
+terraform init
+terraform validate
+terraform plan
+terraform apply
+```
 
-## 🧹 Cleanup
+The default region is `us-east-1` and the default domain is `aws3tier.site`.
+Change the values with a `.tfvars` file or command-line variables when needed.
 
-To avoid unnecessary AWS costs, destroy the resources when you are finished testing:
+### LocalStack DEV
+
+`environments/LocalStack-DEV` is a small LocalStack configuration. It currently
+loads the VPC module and uses LocalStack service endpoints at `10.147.20.85:4566`.
+It is not equivalent to the complete AWS DEV environment.
+
+```bash
+cd environments/LocalStack-DEV
+terraform init
+terraform validate
+terraform plan
+terraform apply
+```
+
+Make sure LocalStack is running and reachable before using this environment.
+
+## Folder Structure
+
+```text
+.
+├── environments/
+│   ├── AWS-DEV/          # Full AWS deployment
+│   └── LocalStack-DEV/   # LocalStack VPC test environment
+├── global/               # Terraform state bucket resources
+├── modules/
+│   ├── asg/              # Frontend and backend Auto Scaling Groups
+│   ├── cloudfront/       # CloudFront distribution and OAC
+│   ├── elasticache/      # Redis cache
+│   ├── elb/              # Public and internal ALBs
+│   ├── rds/              # MySQL database
+│   ├── route53/          # DNS records
+│   ├── s3_static/        # Static content bucket
+│   ├── vpc/              # VPC and security groups
+│   └── waf/              # CloudFront WAF
+├── scripts/              # EC2 user-data scripts
+├── assets/               # Architecture diagram
+└── iam_policy.json       # Terraform deployment IAM policy
+```
+
+## Important Notes
+
+- The AWS environment can create paid resources, especially NAT Gateways,
+    load balancers, RDS, ElastiCache, and CloudFront.
+- The RDS password is generated by Terraform with `random_password`.
+- Database deletion protection is enabled. Review this before destroying the
+    environment.
+- `terraform.tfstate` and plan files can contain sensitive information. Do not
+    commit state files, plan files, passwords, or AWS credentials.
+- The deployment policy is intentionally broad so Terraform can manage the full
+    stack. For production, reduce permissions and scope resources by ARN.
+- The frontend and backend user-data scripts expect the application software and
+    configuration used by this project.
+
+## Cleanup
+
+Run this from the same environment directory that was deployed:
+
 ```bash
 terraform destroy
 ```
+
+Review the plan carefully. Some resources have deletion protection or lifecycle
+settings that can prevent automatic deletion.
